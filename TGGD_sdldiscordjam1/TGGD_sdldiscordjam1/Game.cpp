@@ -15,5 +15,5 @@ void Game::Update()
 
 void Game::HandleInput(const std::string& input)
 {
-
+	Display::WriteLine(input);
 }

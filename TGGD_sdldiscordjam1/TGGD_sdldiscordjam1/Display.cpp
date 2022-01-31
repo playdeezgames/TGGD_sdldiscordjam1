@@ -32,6 +32,7 @@ static SDL_Texture* texture = nullptr;
 static std::map<char, SDL_Rect> textureCellRects{};
 static std::vector<SDL_Rect> displayCellRects{};
 static size_t currentPosition{};
+static size_t topLinePosition{};
 static std::tuple<Uint8, Uint8, Uint8> currentColor = std::make_tuple<Uint8, Uint8, Uint8>(255,255,255);
 static std::vector<DisplayCell> displayCells{};
 
@@ -117,8 +118,9 @@ void Display::Run()
 		SDL_RenderClear(renderer);
 		for (size_t index = 0; index < displayCells.size(); ++index)
 		{
-			auto color = displayCells.at(index).color;
-			auto character = displayCells.at(index).character;
+			auto displayPosition = (index + topLinePosition) % displayCells.size();
+			auto color = displayCells.at(displayPosition).color;
+			auto character = displayCells.at(displayPosition).character;
 			SDL_SetTextureColorMod(texture, std::get<0>(color), std::get<1>(color), std::get<2>(color));
 			SDL_RenderCopy(renderer, texture, &textureCellRects.at(character), &displayCellRects.at(index));
 		}
@@ -149,6 +151,15 @@ void Display::WriteCharacter(char character)
 	displayCells[currentPosition] = DisplayCell(currentColor, character);
 	currentPosition++;
 	currentPosition %= displayCells.size();
+	if (currentPosition == topLinePosition)
+	{
+		for (size_t x = topLinePosition; x < topLinePosition + CELL_COLUMNS; ++x)
+		{
+			displayCells[x] = DisplayCell(currentColor, ' ');
+		}
+		topLinePosition += CELL_COLUMNS;
+		topLinePosition %= displayCells.size();
+	}
 }
 
 void Display::WriteText(const std::string& text)
