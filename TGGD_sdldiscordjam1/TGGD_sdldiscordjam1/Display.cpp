@@ -5,6 +5,7 @@
 #include <map>
 #include "Game.h"
 #include <algorithm>
+#include "Colors.h"
 static constexpr auto LOGICAL_WIDTH = 640;
 static constexpr auto LOGICAL_HEIGHT = 360;
 static constexpr auto SCREEN_WIDTH = LOGICAL_WIDTH * 2;
@@ -111,6 +112,18 @@ void Display::Run()
 			case SDL_TEXTINPUT:
 				Game::HandleInput(evt.text.text);
 				break;
+			case SDL_KEYDOWN:
+				switch (evt.key.keysym.sym)
+				{
+				case SDLK_BACKSPACE:
+					Game::HandleInput("\b");
+					break;
+				case SDLK_KP_ENTER:
+				case SDLK_RETURN:
+					Game::HandleInput("\n");
+					break;
+				}
+				break;
 			}
 		}
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -180,3 +193,15 @@ void Display::SetColor(uint8_t r, uint8_t g, uint8_t b)
 {
 	currentColor = std::make_tuple(r, g, b);
 }
+
+void Display::SetColor(const std::tuple<uint8_t, uint8_t, uint8_t>& color)
+{
+	currentColor = color;
+}
+
+void Display::Backspace()
+{
+	currentPosition = (currentPosition + displayCells.size() - 1);
+	displayCells[currentPosition] = DisplayCell(currentColor, '\0');
+}
+
