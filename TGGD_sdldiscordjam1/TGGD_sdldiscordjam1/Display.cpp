@@ -156,6 +156,15 @@ void Display::WriteText(const std::string& text)
 	std::for_each(text.begin(), text.end(), Display::WriteCharacter);
 }
 
+void Display::WriteLine(const std::string& text)
+{
+	WriteText(text);
+	while (currentPosition % CELL_COLUMNS != 0)
+	{
+		WriteCharacter(' ');
+	}
+}
+
 void Display::SetColor(uint8_t r, uint8_t g, uint8_t b)
 {
 	currentColor = std::make_tuple(r, g, b);
