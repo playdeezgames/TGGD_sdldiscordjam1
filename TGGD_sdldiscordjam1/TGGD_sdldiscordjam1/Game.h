@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <functional>
+#include <optional>
 struct Game
 {
 	Game() = delete;
@@ -7,4 +9,9 @@ struct Game
 	static void Finish();
 	static void Update();
 	static void HandleInput(const std::string& input);
+	static size_t RegisterState(
+		std::function<void()> starter,
+		std::function<void()> updater, 
+		std::function<void(const std::string&)> inputHandler);
+	static void SetCurrentState(std::optional<size_t> state);
 };

@@ -157,6 +157,7 @@
     <ClCompile Include="TGGD_sdldiscordjam1.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Game.h" />
   </ItemGroup>
