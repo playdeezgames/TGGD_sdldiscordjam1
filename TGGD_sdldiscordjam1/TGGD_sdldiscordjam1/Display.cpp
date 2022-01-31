@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <vector>
+#include "Game.h"
 static constexpr auto LOGICAL_WIDTH = 640;
 static constexpr auto LOGICAL_HEIGHT = 360;
 static constexpr auto SCREEN_WIDTH = LOGICAL_WIDTH * 2;
@@ -62,7 +63,7 @@ void Display::Run()
 
 	texture = IMG_LoadTexture(renderer, TEXTURE_FILE_NAME);
 
-	//game setup
+	Game::Start();
 
 	SDL_Event evt{};
 
@@ -71,16 +72,23 @@ void Display::Run()
 	{
 		while (SDL_PollEvent(&evt))
 		{
-			done = evt.type == SDL_QUIT;
-			//game event handling
+			switch (evt.type)
+			{
+			case SDL_QUIT:
+				done = true;
+				break;
+			case SDL_TEXTINPUT:
+				Game::HandleInput(evt.text.text);
+				break;
+			}
 		}
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
-		//game rendering
+		Game::Update();
 		SDL_RenderPresent(renderer);
 	}
 
-	//game cleanup
+	Game::Finish();
 
 	if (texture)
 	{
