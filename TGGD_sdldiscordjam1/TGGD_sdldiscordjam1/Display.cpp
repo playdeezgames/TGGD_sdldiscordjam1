@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include "Game.h"
+#include <algorithm>
 static constexpr auto LOGICAL_WIDTH = 640;
 static constexpr auto LOGICAL_HEIGHT = 360;
 static constexpr auto SCREEN_WIDTH = LOGICAL_WIDTH * 2;
@@ -148,4 +149,14 @@ void Display::WriteCharacter(char character)
 	displayCells[currentPosition] = DisplayCell(currentColor, character);
 	currentPosition++;
 	currentPosition %= displayCells.size();
+}
+
+void Display::WriteText(const std::string& text)
+{
+	std::for_each(text.begin(), text.end(), Display::WriteCharacter);
+}
+
+void Display::SetColor(uint8_t r, uint8_t g, uint8_t b)
+{
+	currentColor = std::make_tuple(r, g, b);
 }
