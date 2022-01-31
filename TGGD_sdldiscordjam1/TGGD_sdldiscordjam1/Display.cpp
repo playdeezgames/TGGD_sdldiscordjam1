@@ -1,12 +1,17 @@
 #include "Display.h"
 #include <SDL.h>
 #include <SDL_image.h>
+static constexpr auto LOGICAL_WIDTH = 640;
+static constexpr auto LOGICAL_HEIGHT = 360;
+static constexpr auto SCREEN_WIDTH = LOGICAL_WIDTH * 2;
+static constexpr auto SCREEN_HEIGHT = LOGICAL_HEIGHT * 2;
+static constexpr auto CELL_WIDTH = 8;
+static constexpr auto CELL_HEIGHT = 8;
+static constexpr auto CELL_COLUMNS = LOGICAL_WIDTH / CELL_WIDTH;
+static constexpr auto CELL_ROWS = LOGICAL_HEIGHT / CELL_HEIGHT;
+
 void Display::Run()
 {
-	constexpr auto SCREEN_WIDTH = 1280;
-	constexpr auto SCREEN_HEIGHT = 720;
-	constexpr auto LOGICAL_WIDTH = 640;
-	constexpr auto LOGICAL_HEIGHT = 360;
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_PNG);
