@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <vector>
+#include <map>
 #include "Game.h"
 static constexpr auto LOGICAL_WIDTH = 640;
 static constexpr auto LOGICAL_HEIGHT = 360;
@@ -16,21 +17,48 @@ static constexpr auto TEXTURE_FILE_NAME = "romfont8x8.png";
 static constexpr auto TEXTURE_COLUMNS = 16;
 static constexpr auto TEXTURE_ROWS = 16;
 
+struct DisplayCell
+{
+	DisplayCell(const std::tuple<Uint8, Uint8, Uint8>& color, char character)
+		: color(color)
+		, character(character) {}
+	std::tuple<Uint8, Uint8, Uint8> color;
+	char character;
+};
 
 static SDL_Renderer* renderer = nullptr;
 static SDL_Texture* texture = nullptr;
-static std::vector<SDL_Rect> textureCells{};
-static std::vector<SDL_Rect> displayCells{};
-static size_t cursorPosition{};
+static std::map<char, SDL_Rect> textureCellRects{};
+static std::vector<SDL_Rect> displayCellRects{};
+static size_t currentPosition{};
+static std::tuple<Uint8, Uint8, Uint8> currentColor = std::make_tuple<Uint8, Uint8, Uint8>(255,255,255);
+static std::vector<DisplayCell> displayCells{};
 
-static void InitializeTextureCells()
+static void InitializeTextureCellRects()
 {
-	textureCells.clear();
+	textureCellRects.clear();
+	char character = 0;
 	for (int row = 0; row < TEXTURE_ROWS; ++row)
 	{
 		for (int column = 0; column < TEXTURE_COLUMNS; ++column)
 		{
-			textureCells.emplace_back(SDL_Rect{ column * CELL_WIDTH, row * CELL_HEIGHT, CELL_WIDTH, CELL_HEIGHT });
+			textureCellRects.emplace(
+				std::make_pair(
+					character++, 
+					SDL_Rect{ column * CELL_WIDTH, row * CELL_HEIGHT, CELL_WIDTH, CELL_HEIGHT })
+			);
+		}
+	}
+}
+
+static void InitializeDisplayCellRects()
+{
+	displayCellRects.clear();
+	for (int row = 0; row < CELL_ROWS; ++row)
+	{
+		for (int column = 0; column < CELL_COLUMNS; ++column)
+		{
+			displayCellRects.emplace_back(SDL_Rect{ column * CELL_WIDTH, row * CELL_HEIGHT, CELL_WIDTH, CELL_HEIGHT });
 		}
 	}
 }
@@ -42,14 +70,15 @@ static void InitializeDisplayCells()
 	{
 		for (int column = 0; column < CELL_COLUMNS; ++column)
 		{
-			displayCells.emplace_back(SDL_Rect{ column * CELL_WIDTH, row * CELL_HEIGHT, CELL_WIDTH, CELL_HEIGHT });
+			displayCells.emplace_back(std::make_tuple<Uint8,Uint8,Uint8>(0,0,0), '\0');
 		}
 	}
 }
 
 void Display::Run()
 {
-	InitializeTextureCells();
+	InitializeTextureCellRects();
+	InitializeDisplayCellRects();
 	InitializeDisplayCells();
 
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -83,8 +112,15 @@ void Display::Run()
 			}
 		}
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderClear(renderer);
 		Game::Update();
+		SDL_RenderClear(renderer);
+		for (size_t index = 0; index < displayCells.size(); ++index)
+		{
+			auto color = displayCells.at(index).color;
+			auto character = displayCells.at(index).character;
+			SDL_SetTextureColorMod(texture, std::get<0>(color), std::get<1>(color), std::get<2>(color));
+			SDL_RenderCopy(renderer, texture, &textureCellRects.at(character), &displayCellRects.at(index));
+		}
 		SDL_RenderPresent(renderer);
 	}
 
@@ -105,4 +141,11 @@ void Display::Run()
 
 	IMG_Quit();
 	SDL_Quit();
+}
+
+void Display::WriteCharacter(char character)
+{
+	displayCells[currentPosition] = DisplayCell(currentColor, character);
+	currentPosition++;
+	currentPosition %= displayCells.size();
 }
