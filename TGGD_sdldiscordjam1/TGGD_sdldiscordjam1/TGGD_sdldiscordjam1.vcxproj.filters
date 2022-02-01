@@ -61,5 +61,8 @@
     <ClInclude Include="InPlay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Direction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

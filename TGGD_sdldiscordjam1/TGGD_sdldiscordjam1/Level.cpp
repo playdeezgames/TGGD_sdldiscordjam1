@@ -142,3 +142,13 @@ void Level::Draw()
 			Display::WriteLine();
 		});
 }
+
+void Level::Move(const Direction& direction)
+{
+
+}
+
+bool Level::CanMove(const Direction& direction)
+{
+	return false;
+}
