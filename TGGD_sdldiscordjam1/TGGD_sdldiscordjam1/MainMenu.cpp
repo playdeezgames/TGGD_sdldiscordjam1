@@ -2,16 +2,16 @@
 #include "Game.h"
 #include "Display.h"
 #include "Colors.h"
+#include "InputBuffer.h"
 
 static std::optional<size_t> stateId{};
-static std::string buffer = "";
 
 size_t MainMenu::GetStateId()
 {
 	return *stateId;
 }
 
-static void Starter()
+static void Refresh()
 {
 	Display::WriteLine();
 	Display::SetColor(Colors::GREEN);
@@ -21,21 +21,35 @@ static void Starter()
 	Display::WriteLine();
 	Display::SetColor(Colors::GRAY);
 	Display::WriteText(">");
-	buffer = "";
 }
 
-static void Updater()
+static void Starter()
 {
+	InputBuffer::Clear();
+	Refresh();
+}
 
+static void OnCommand(const std::string& command)
+{
+	if (command == "0")
+	{
+
+	}
+	else
+	{
+		Display::SetColor(Colors::RED);
+		Display::WriteLine();
+		Display::WriteLine("Invalid input!");
+		Refresh();
+	}
 }
 
 static void InputHandler(const std::string& input)
 {
-	Display::WriteText(input);
-	buffer += input;
+	InputBuffer::Append(input, OnCommand);
 }
 
 void MainMenu::Start()
 {
-	stateId = Game::RegisterState(Starter, Updater, InputHandler);
+	stateId = Game::RegisterState(Starter, InputHandler);
 }

@@ -127,7 +127,6 @@ void Display::Run()
 			}
 		}
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		Game::Update();
 		SDL_RenderClear(renderer);
 		for (size_t index = 0; index < displayCells.size(); ++index)
 		{
@@ -201,7 +200,7 @@ void Display::SetColor(const std::tuple<uint8_t, uint8_t, uint8_t>& color)
 
 void Display::Backspace()
 {
-	currentPosition = (currentPosition + displayCells.size() - 1);
+	currentPosition = (currentPosition + displayCells.size() - 1) % displayCells.size();
 	displayCells[currentPosition] = DisplayCell(currentColor, '\0');
 }
 

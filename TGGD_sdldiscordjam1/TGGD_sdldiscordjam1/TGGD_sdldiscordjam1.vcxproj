@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="InputBuffer.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="TGGD_sdldiscordjam1.cpp" />
   </ItemGroup>
@@ -161,6 +162,7 @@
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="InputBuffer.h" />
     <ClInclude Include="MainMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -4,16 +4,13 @@
 struct State
 {
 	State(std::function<void()> starter,
-		std::function<void()> updater,
 		std::function<void(const std::string&)> inputHandler)
 		: starter(starter)
-		, updater(updater)
 		, inputHandler(inputHandler)
 	{
 
 	}
 	std::function<void()> starter;
-	std::function<void()> updater;
 	std::function<void(const std::string&)> inputHandler;
 };
 
@@ -21,11 +18,10 @@ static std::vector<State> states{};
 
 size_t Game::RegisterState(
 	std::function<void()> starter,
-	std::function<void()> updater,
 	std::function<void(const std::string&)> inputHandler)
 {
 	auto result = states.size();
-	states.emplace_back(starter, updater, inputHandler);
+	states.emplace_back(starter, inputHandler);
 	return result;
 }
 
@@ -53,11 +49,6 @@ void Game::Start()
 void Game::Finish()
 {
 
-}
-
-void Game::Update()
-{
-	states.at(*currentState).updater();
 }
 
 void Game::HandleInput(const std::string& input)
