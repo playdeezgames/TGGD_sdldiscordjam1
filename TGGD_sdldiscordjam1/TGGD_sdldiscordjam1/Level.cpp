@@ -28,7 +28,7 @@ static const std::vector<std::string> rawLevelData =
 	"          #$$ #. ###          ",
 	"          # # # $@##          ",
 	"          # .    ###          ",
-	"          ##########          "
+	"          ##########          ",
 	"                              ",
 	"                              ",
 	"                              ",
@@ -143,12 +143,55 @@ void Level::Draw()
 		});
 }
 
+static void MoveNorth()
+{
+	for (size_t destinationRow = 0; destinationRow < levelData.size() - 1; ++destinationRow)
+	{
+		size_t sourceRow = destinationRow + 1;
+		for (size_t column = 0; column < levelData[destinationRow].size(); ++column)
+		{
+			auto& destination = levelData[destinationRow][column];
+			auto& source = levelData[sourceRow][column];
+			destination.target = source.target;
+			destination.occupant = source.occupant;
+		}
+	}
+	for (size_t column = 0; column < levelData.back().size(); ++column)
+	{
+		levelData.back()[column].target = false;
+		levelData.back()[column].occupant = std::nullopt;
+	}
+}
+
 void Level::Move(const Direction& direction)
 {
+	if (CanMove(direction))
+	{
+		switch (direction)
+		{
+		case Direction::NORTH:
+			MoveNorth();
+			break;
+		}
+	}
+}
 
+static bool CanMoveNorth()
+{
+	const auto& row = levelData.front();
+	return 
+		std::all_of(
+			row.begin(), 
+			row.end(), 
+			[](const auto& cell) 
+			{
+				return !cell.occupant.has_value() && !cell.target;
+			});
 }
 
 bool Level::CanMove(const Direction& direction)
 {
-	return false;
+	return 
+		(direction == Direction::NORTH) ? (CanMoveNorth()) :
+		(false);
 }

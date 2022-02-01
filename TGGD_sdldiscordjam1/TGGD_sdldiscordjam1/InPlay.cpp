@@ -36,6 +36,9 @@ static void Refresh()
 	}
 	Display::WriteLine("5) Reset Environment");
 	Display::WriteLine("0) Abandon Game");
+	Display::WriteLine();
+	Display::SetColor(Colors::GRAY);
+	Display::WriteText(">");
 }
 
 static void Starter()
@@ -49,6 +52,11 @@ static void OnCommand(const std::string& command)
 	if (command == "0")
 	{
 		Game::SetCurrentState(MainMenu::GetStateId());
+	}
+	else if (command == "1")
+	{
+		Level::Move(Direction::NORTH);
+		Refresh();
 	}
 	else if (command == "5")
 	{
