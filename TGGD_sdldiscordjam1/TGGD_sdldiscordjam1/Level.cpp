@@ -143,55 +143,55 @@ void Level::Draw()
 		});
 }
 
-static void MoveNorth()
+void Level::Move()
 {
-	for (size_t destinationRow = 0; destinationRow < levelData.size() - 1; ++destinationRow)
+	if (CanMove())
 	{
-		size_t sourceRow = destinationRow + 1;
-		for (size_t column = 0; column < levelData[destinationRow].size(); ++column)
+		for (size_t destinationRow = 0; destinationRow < levelData.size() - 1; ++destinationRow)
 		{
-			auto& destination = levelData[destinationRow][column];
-			auto& source = levelData[sourceRow][column];
-			destination.target = source.target;
-			destination.occupant = source.occupant;
+			size_t sourceRow = destinationRow + 1;
+			for (size_t column = 0; column < levelData[destinationRow].size(); ++column)
+			{
+				auto& destination = levelData[destinationRow][column];
+				auto& source = levelData[sourceRow][column];
+				destination.target = source.target;
+				destination.occupant = source.occupant;
+			}
 		}
-	}
-	for (size_t column = 0; column < levelData.back().size(); ++column)
-	{
-		levelData.back()[column].target = false;
-		levelData.back()[column].occupant = std::nullopt;
-	}
-}
-
-void Level::Move(const Direction& direction)
-{
-	if (CanMove(direction))
-	{
-		switch (direction)
+		for (size_t column = 0; column < levelData.back().size(); ++column)
 		{
-		case Direction::NORTH:
-			MoveNorth();
-			break;
+			levelData.back()[column].target = false;
+			levelData.back()[column].occupant = std::nullopt;
 		}
 	}
 }
 
-static bool CanMoveNorth()
+bool Level::CanMove()
 {
 	const auto& row = levelData.front();
-	return 
+	return
 		std::all_of(
-			row.begin(), 
-			row.end(), 
-			[](const auto& cell) 
+			row.begin(),
+			row.end(),
+			[](const auto& cell)
 			{
 				return !cell.occupant.has_value() && !cell.target;
 			});
 }
 
-bool Level::CanMove(const Direction& direction)
+void Level::Rotate()
 {
-	return 
-		(direction == Direction::NORTH) ? (CanMoveNorth()) :
-		(false);
+	auto oldLevelData = levelData;
+	const size_t rows = oldLevelData.size();
+	const size_t columns = oldLevelData.front().size();
+	for (size_t row = 0; row < rows; ++row)
+	{
+		for (size_t column = 0; column < columns; ++column)
+		{
+			auto sourceCell = oldLevelData[row][column];
+			auto& destinationCell = levelData[column][columns - 1 - row];
+			destinationCell.target = sourceCell.target;
+			destinationCell.occupant = sourceCell.occupant;
+		}
+	}
 }

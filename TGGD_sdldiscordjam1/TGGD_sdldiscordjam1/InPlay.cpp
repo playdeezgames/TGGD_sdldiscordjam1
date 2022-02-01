@@ -18,22 +18,11 @@ static void Refresh()
 	Level::Draw();
 	Display::WriteLine();
 	Display::SetColor(Colors::YELLOW);
-	if (Level::CanMove(Direction::NORTH))
+	if (Level::CanMove())
 	{
-		Display::WriteLine("1) Move Environment North");
+		Display::WriteLine("1) Move Environment Up");
 	}
-	if (Level::CanMove(Direction::EAST))
-	{
-		Display::WriteLine("2) Move Environment East");
-	}
-	if (Level::CanMove(Direction::SOUTH))
-	{
-		Display::WriteLine("3) Move Environment South");
-	}
-	if (Level::CanMove(Direction::WEST))
-	{
-		Display::WriteLine("4) Move Environment West");
-	}
+	Display::WriteLine("2) Rotate Environment");
 	Display::WriteLine("5) Reset Environment");
 	Display::WriteLine("0) Abandon Game");
 	Display::WriteLine();
@@ -55,7 +44,12 @@ static void OnCommand(const std::string& command)
 	}
 	else if (command == "1")
 	{
-		Level::Move(Direction::NORTH);
+		Level::Move();
+		Refresh();
+	}
+	else if (command == "2")
+	{
+		Level::Rotate();
 		Refresh();
 	}
 	else if (command == "5")

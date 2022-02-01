@@ -164,7 +164,6 @@
   <ItemGroup>
     <ClInclude Include="Colors.h" />
     <ClInclude Include="ConfirmQuit.h" />
-    <ClInclude Include="Direction.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="InPlay.h" />
