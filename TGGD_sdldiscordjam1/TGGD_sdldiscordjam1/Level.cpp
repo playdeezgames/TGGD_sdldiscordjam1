@@ -153,9 +153,16 @@ void Level::Move()
 			for (size_t column = 0; column < levelData[destinationRow].size(); ++column)
 			{
 				auto& destination = levelData[destinationRow][column];
-				auto& source = levelData[sourceRow][column];
+				auto source = levelData[sourceRow][column];
 				destination.target = source.target;
-				destination.occupant = source.occupant;
+				if (source.occupant)
+				{
+					destination.occupant = source.occupant;
+				}
+				else
+				{
+					destination.occupant = source.occupant;
+				}
 			}
 		}
 		for (size_t column = 0; column < levelData.back().size(); ++column)
