@@ -99,15 +99,14 @@ void Display::Run()
 
 	SDL_Event evt{};
 
-	bool done = false;
-	while (!done)
+	while (Game::IsRunning())
 	{
 		while (SDL_PollEvent(&evt))
 		{
 			switch (evt.type)
 			{
 			case SDL_QUIT:
-				done = true;
+				Game::SetCurrentState(std::nullopt);
 				break;
 			case SDL_TEXTINPUT:
 				Game::HandleInput(evt.text.text);

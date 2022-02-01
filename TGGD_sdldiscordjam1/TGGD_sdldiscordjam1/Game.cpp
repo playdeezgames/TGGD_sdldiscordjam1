@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Display.h"
 #include "MainMenu.h"
+#include "ConfirmQuit.h"
 struct State
 {
 	State(std::function<void()> starter,
@@ -43,6 +44,7 @@ void Game::SetCurrentState(std::optional<size_t> state)
 void Game::Start()
 {
 	MainMenu::Start();
+	ConfirmQuit::Start();
 	SetCurrentState(MainMenu::GetStateId());
 }
 
@@ -56,3 +58,7 @@ void Game::HandleInput(const std::string& input)
 	states.at(*currentState).inputHandler(input);
 }
 
+bool Game::IsRunning()
+{
+	return currentState.has_value();
+}

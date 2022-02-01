@@ -12,4 +12,5 @@ struct Game
 		std::function<void()> starter,
 		std::function<void(const std::string&)> inputHandler);
 	static void SetCurrentState(std::optional<size_t> state);
+	static bool IsRunning();
 };
