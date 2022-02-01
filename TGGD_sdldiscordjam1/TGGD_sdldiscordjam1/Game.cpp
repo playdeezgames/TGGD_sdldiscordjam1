@@ -2,6 +2,7 @@
 #include "Display.h"
 #include "MainMenu.h"
 #include "ConfirmQuit.h"
+#include "InPlay.h"
 struct State
 {
 	State(std::function<void()> starter,
@@ -45,6 +46,7 @@ void Game::Start()
 {
 	MainMenu::Start();
 	ConfirmQuit::Start();
+	InPlay::Start();
 	SetCurrentState(MainMenu::GetStateId());
 }
 

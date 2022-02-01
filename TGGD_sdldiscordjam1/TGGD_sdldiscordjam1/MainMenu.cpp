@@ -4,7 +4,8 @@
 #include "Colors.h"
 #include "InputBuffer.h"
 #include "ConfirmQuit.h"
-
+#include "Level.h"
+#include "InPlay.h"
 static std::optional<size_t> stateId{};
 
 size_t MainMenu::GetStateId()
@@ -18,6 +19,7 @@ static void Refresh()
 	Display::SetColor(Colors::GREEN);
 	Display::WriteLine("Main Menu:");
 	Display::SetColor(Colors::YELLOW);
+	Display::WriteLine("1) Start");
 	Display::WriteLine("0) Quit");
 	Display::WriteLine();
 	Display::SetColor(Colors::GRAY);
@@ -35,6 +37,11 @@ static void OnCommand(const std::string& command)
 	if (command == "0")
 	{
 		Game::SetCurrentState(ConfirmQuit::GetStateId());
+	}
+	else if (command == "1")
+	{
+		Level::Reset();
+		Game::SetCurrentState(InPlay::GetStateId());
 	}
 	else
 	{
