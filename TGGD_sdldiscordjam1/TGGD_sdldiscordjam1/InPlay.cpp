@@ -6,6 +6,7 @@
 #include "Display.h"
 #include "Colors.h"
 #include "MainMenu.h"
+#include <format>
 static std::optional<size_t> stateId{};
 
 size_t InPlay::GetStateId()
@@ -16,13 +17,15 @@ size_t InPlay::GetStateId()
 static void Refresh()
 {
 	Level::Draw();
+	Display::SetColor(Colors::GRAY);
+	Display::WriteLine(std::format("Moves: {}", Level::GetMoveCounter()));
 	Display::WriteLine();
 	Display::SetColor(Colors::YELLOW);
 	if (Level::CanMove())
 	{
 		Display::WriteLine("1) Move Environment Up");
 	}
-	Display::WriteLine("2) Rotate Environment");
+	Display::WriteLine("2) Rotate Environment Clockwise");
 	Display::WriteLine("3) Reset Environment");
 	Display::WriteLine("0) Abandon Game");
 	Display::WriteLine();
@@ -45,13 +48,19 @@ static void OnCommand(const std::string& command)
 	else if (command == "1")
 	{
 		Level::Move();
-		Refresh();
 		if (Level::IsWinner())
 		{
+			Level::Draw();
+			Display::SetColor(Colors::GRAY);
+			Display::WriteLine(std::format("Total Moves: {}", Level::GetMoveCounter()));
 			Display::WriteLine();
 			Display::SetColor(Colors::GREEN);
 			Display::WriteLine("YOU WIN!");
 			Game::SetCurrentState(MainMenu::GetStateId());
+		}
+		else
+		{
+			Refresh();
 		}
 	}
 	else if (command == "2")

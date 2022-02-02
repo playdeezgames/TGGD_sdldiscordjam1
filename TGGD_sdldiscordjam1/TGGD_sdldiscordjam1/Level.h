@@ -8,4 +8,5 @@ struct Level
 	static bool CanMove();
 	static void Rotate();
 	static bool IsWinner();
+	static size_t GetMoveCounter();
 };

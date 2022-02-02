@@ -56,10 +56,11 @@ struct LevelCell
 };
 
 static std::vector<std::vector<LevelCell>> levelData{};
-
+static size_t moveCounter{};
 void Level::Reset()
 {
 	levelData.clear();
+	moveCounter = 0;
 	std::transform(
 		rawLevelData.begin(), 
 		rawLevelData.end(),
@@ -149,6 +150,7 @@ void Level::Move()
 {
 	if (CanMove())
 	{
+		moveCounter++;
 		for (size_t row = 0; row < levelData.size() - 1; ++row)
 		{
 			for (size_t column = 0; column < levelData[row].size(); ++column)
@@ -221,6 +223,7 @@ bool Level::CanMove()
 
 void Level::Rotate()
 {
+	moveCounter++;
 	auto oldLevelData = levelData;
 	const size_t rows = oldLevelData.size();
 	const size_t columns = oldLevelData.front().size();
@@ -256,3 +259,7 @@ bool Level::IsWinner()
 		});
 }
 
+size_t Level::GetMoveCounter()
+{
+	return moveCounter;
+}
