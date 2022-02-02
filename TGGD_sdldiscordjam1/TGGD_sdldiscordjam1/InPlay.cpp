@@ -23,7 +23,7 @@ static void Refresh()
 		Display::WriteLine("1) Move Environment Up");
 	}
 	Display::WriteLine("2) Rotate Environment");
-	Display::WriteLine("5) Reset Environment");
+	Display::WriteLine("3) Reset Environment");
 	Display::WriteLine("0) Abandon Game");
 	Display::WriteLine();
 	Display::SetColor(Colors::GRAY);
@@ -52,7 +52,7 @@ static void OnCommand(const std::string& command)
 		Level::Rotate();
 		Refresh();
 	}
-	else if (command == "5")
+	else if (command == "3")
 	{
 		Level::Reset();
 		Refresh();
