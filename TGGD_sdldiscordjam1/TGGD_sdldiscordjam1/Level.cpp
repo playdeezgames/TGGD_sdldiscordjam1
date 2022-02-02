@@ -238,6 +238,21 @@ void Level::Rotate()
 
 bool Level::IsWinner()
 {
-	return false;
+	return std::all_of(
+		levelData.begin(),
+		levelData.end(),
+		[](const auto& rowData)
+		{
+			return std::all_of(
+				rowData.begin(),
+				rowData.end(),
+				[](const auto& cell) 
+				{
+					return 
+						!cell.occupant.has_value() || 
+						*cell.occupant != Occupant::BOX || 
+						cell.target;
+				});
+		});
 }
 

@@ -46,6 +46,13 @@ static void OnCommand(const std::string& command)
 	{
 		Level::Move();
 		Refresh();
+		if (Level::IsWinner())
+		{
+			Display::WriteLine();
+			Display::SetColor(Colors::GREEN);
+			Display::WriteLine("YOU WIN!");
+			Game::SetCurrentState(MainMenu::GetStateId());
+		}
 	}
 	else if (command == "2")
 	{
