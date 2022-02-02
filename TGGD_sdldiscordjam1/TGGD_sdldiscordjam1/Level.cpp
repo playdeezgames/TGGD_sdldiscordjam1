@@ -52,6 +52,7 @@ struct LevelCell
 {
 	bool target;
 	std::optional<Occupant> occupant;
+	bool immovable;
 };
 
 static std::vector<std::vector<LevelCell>> levelData{};
@@ -80,6 +81,7 @@ void Level::Reset()
 						(character == '$') ? (std::optional<Occupant>(Occupant::BOX)) :
 						(character == '*') ? (std::optional<Occupant>(Occupant::BOX)) :
 						(std::nullopt);
+					cell.immovable = false;
 					return cell;
 				});
 			return result;
@@ -147,6 +149,30 @@ void Level::Move()
 {
 	if (CanMove())
 	{
+		for (size_t row = 0; row < levelData.size() - 1; ++row)
+		{
+			for (size_t column = 0; column < levelData[row].size(); ++column)
+			{
+				auto& cell = levelData[row][column];
+				if (cell.occupant.has_value() && *cell.occupant == Occupant::CHARACTER)
+				{
+					auto& nextCell = levelData[row + 1][column];
+					if (!nextCell.occupant.has_value())
+					{
+						cell.immovable = true;
+					}
+					else if (*nextCell.occupant == Occupant::BOX)
+					{
+						auto& thirdCell = levelData[row + 2][column];
+						if (!thirdCell.occupant.has_value())
+						{
+							cell.immovable = true;
+							nextCell.immovable = true;
+						}
+					}
+				}
+			}
+		}
 		for (size_t destinationRow = 0; destinationRow < levelData.size() - 1; ++destinationRow)
 		{
 			size_t sourceRow = destinationRow + 1;
@@ -155,9 +181,17 @@ void Level::Move()
 				auto& destination = levelData[destinationRow][column];
 				auto source = levelData[sourceRow][column];
 				destination.target = source.target;
-				if (source.occupant)
+				if (!destination.immovable && source.immovable)
 				{
-					destination.occupant = source.occupant;
+					destination.occupant = std::nullopt;
+				}
+				else if (destination.immovable && !source.immovable)
+				{
+
+				}
+				else if (destination.immovable && source.immovable)
+				{
+
 				}
 				else
 				{
@@ -169,6 +203,13 @@ void Level::Move()
 		{
 			levelData.back()[column].target = false;
 			levelData.back()[column].occupant = std::nullopt;
+		}
+		for (size_t row = 0; row < levelData.size() - 1; ++row)
+		{
+			for (size_t column = 0; column < levelData[row].size(); ++column)
+			{
+				levelData[row][column].immovable = false;
+			}
 		}
 	}
 }
