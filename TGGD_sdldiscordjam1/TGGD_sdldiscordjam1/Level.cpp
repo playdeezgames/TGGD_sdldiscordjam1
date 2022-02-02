@@ -185,15 +185,7 @@ void Level::Move()
 				{
 					destination.occupant = std::nullopt;
 				}
-				else if (destination.immovable && !source.immovable)
-				{
-
-				}
-				else if (destination.immovable && source.immovable)
-				{
-
-				}
-				else
+				else if (!destination.immovable && !source.immovable)
 				{
 					destination.occupant = source.occupant;
 				}
@@ -243,3 +235,9 @@ void Level::Rotate()
 		}
 	}
 }
+
+bool Level::IsWinner()
+{
+	return false;
+}
+

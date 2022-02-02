@@ -7,4 +7,5 @@ struct Level
 	static void Move();
 	static bool CanMove();
 	static void Rotate();
+	static bool IsWinner();
 };
